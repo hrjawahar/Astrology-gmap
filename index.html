@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>D1–D9 Life Pattern Analyzer</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">Rule-based browser app for manual D1/D9 interpretation</div>
+        <h1>D1–D9 Life Pattern Analyzer</h1>
+      </div>
+      <div class="top-actions">
+        <button id="downloadReportBtn" class="secondary" disabled>Download Report</button>
+        <button id="saveSessionBtn" class="secondary">Save Session</button>
+        <button id="resetBtn" class="danger">Reset</button>
+      </div>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="inputTab">Input</button>
+      <button class="tab" data-tab="insightsTab">Insights</button>
+      <button class="tab" data-tab="mahadashaTab">Mahadasha Watch Zone</button>
+      <button class="tab" data-tab="referenceTab">Reference Guide</button>
+      <button class="tab" data-tab="historyTab">Saved History</button>
+    </nav>
+
+    <main>
+      <section id="inputTab" class="tab-panel active">
+        <div class="card intro-card">
+          <h2>How this version works</h2>
+          <p>
+            Enter D1 and D9 manually. The engine validates the charts, analyzes early-life pattern through D1,
+            checks later-life durability through D9, and then gives a more usable life-direction output instead of only technical statements.
+          </p>
+          <ul>
+            <li>Lagna sign is mandatory for both charts.</li>
+            <li>Enter planets house-wise, comma separated: <strong>Sun, Moon, Mars, Mercury, Jupiter, Venus, Saturn, Rahu, Ketu</strong>.</li>
+            <li>Each planet should appear once in D1 and once in D9.</li>
+            <li>Your draft is auto-saved in the browser. Saved sessions also remain after closing and reopening the browser on the same device/browser.</li>
+          </ul>
+        </div>
+
+        <div class="grid two-col">
+          <section class="card chart-card">
+            <div class="section-head">
+              <h2>D1 Manual Entry</h2>
+              <label>
+                <span>Lagna Sign</span>
+                <select id="d1Lagna"></select>
+              </label>
+            </div>
+            <div id="d1Grid" class="house-grid"></div>
+          </section>
+
+          <section class="card chart-card">
+            <div class="section-head">
+              <h2>D9 Manual Entry</h2>
+              <label>
+                <span>Lagna Sign</span>
+                <select id="d9Lagna"></select>
+              </label>
+            </div>
+            <div id="d9Grid" class="house-grid"></div>
+          </section>
+        </div>
+
+        <div class="card">
+          <div class="section-head compact">
+            <h2>Validation</h2>
+            <button id="analyzeBtn">Generate Insights</button>
+          </div>
+
+          <div class="form-row">
+            <label>
+              Native Name
+              <input id="nativeName" type="text" placeholder="Optional — appears in report" />
+            </label>
+
+            <label>
+              Notes
+              <input id="notes" type="text" placeholder="Optional working note" />
+            </label>
+          </div>
+
+          <div id="validationBox" class="validation-box muted">No validation run yet.</div>
+        </div>
+      </section>
+
+      <section id="insightsTab" class="tab-panel">
+        <section class="card">
+          <div class="section-head compact">
+            <h2>Quick Verdict</h2>
+            <span class="pill">Specific, not generic</span>
+          </div>
+          <div id="quickVerdictGrid" class="verdict-grid">
+            <div class="empty-state">Run analysis to view quick verdict.</div>
+          </div>
+        </section>
+
+        <div class="grid two-col insights-layout">
+          <section class="card">
+            <h2>Early Life Leaning</h2>
+            <div id="earlyLifeBox" class="empty-state">Run analysis to view early-life leaning.</div>
+          </section>
+
+          <section class="card">
+            <h2>Later Life Leaning</h2>
+            <div id="laterLifeBox" class="empty-state">Run analysis to view later-life leaning.</div>
+          </section>
+        </div>
+
+        <section class="card">
+          <h2>Overall Direction</h2>
+          <div id="directionBox" class="empty-state">Overall journey interpretation will appear here.</div>
+        </section>
+
+        <section class="card">
+          <div class="section-head compact">
+            <h2>D1–D9 Life Pattern</h2>
+            <span class="pill">Mixed = one layer supports while the other layer delays or fluctuates</span>
+          </div>
+          <div id="comparisonTableWrap" class="empty-state">Comparison table will appear here.</div>
+        </section>
+
+        <section class="card">
+          <h2>Life Factor Insights</h2>
+          <div id="domainCards" class="domain-cards"></div>
+        </section>
+
+        <section class="card">
+          <h2>Why this conclusion</h2>
+          <div id="whyBox" class="empty-state">Reasoning narrative will appear here.</div>
+        </section>
+      </section>
+
+      <section id="mahadashaTab" class="tab-panel">
+        <section class="card">
+          <div class="section-head compact">
+            <h2>Mahadasha Watch Zone</h2>
+            <span class="pill">Separate caution view</span>
+          </div>
+          <div id="mahadashaBox" class="empty-state">Run analysis to view mahadasha watch signals.</div>
+        </section>
+      </section>
+
+      <section id="referenceTab" class="tab-panel">
+        <div class="card">
+          <h2>Reference Guide</h2>
+          <div class="accordion-wrap" id="referenceGuide"></div>
+        </div>
+      </section>
+
+      <section id="historyTab" class="tab-panel">
+        <div class="card">
+          <div class="section-head compact">
+            <h2>Saved Sessions</h2>
+            <span class="pill">Stored in browser local storage</span>
+          </div>
+          <div id="historyList" class="history-list"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <template id="accordionTemplate">
+    <details class="accordion-item">
+      <summary></summary>
+      <div class="accordion-content"></div>
+    </details>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
